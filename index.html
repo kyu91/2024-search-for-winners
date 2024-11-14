@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>2024 우수 자문위원단 당첨자 발표</title>
+    <style>
+        /* 기본 라이트 모드 스타일 */
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* 입력창 및 버튼 스타일 */
+        input[type="text"], button {
+            padding: 8px;
+            font-size: 16px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        /* 다크 모드 스타일 */
+        body.dark-mode {
+            background-color: #121212;
+            color: #ffffff;
+        }
+
+        body.dark-mode input[type="text"] {
+            background-color: #333333;
+            color: #ffffff;
+            border: 1px solid #555555;
+        }
+
+        body.dark-mode button {
+            background-color: #1E88E5;
+        }
+
+        /* 결과 텍스트 스타일 */
+        #result {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>당첨 결과를 확인</h1>
+    <input type="text" id="searchValue" placeholder="이름을 입력해 주세요.">
+    <button onclick="searchSheet()">검색</button>
+    <div id="result"></div>
+
+    <script>
+        // 시스템 설정에 따른 초기 모드 적용
+        const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        if (prefersDarkScheme) {
+            document.body.classList.add("dark-mode");
+        }
+
+        async function searchSheet() {
+            const searchValue = document.getElementById('searchValue').value;
+            const resultElement = document.getElementById('result');
+            
+            // 검색 중 메시지 표시
+            resultElement.innerText = "검색 중... 조금만 기다려주세요🫡";
+
+            try {
+                const url = `https://script.google.com/macros/s/AKfycbwVd2Eg2qZ9M_mCiS4k_rzjpzMkBWdueKXo7uSXL65kh0Q7QSm7FVEgG4j9DLcN7i1i3w/exec?search=${encodeURIComponent(searchValue)}`;
+                const response = await fetch(url);
+                const resultText = await response.text();
+                
+                // 검색 완료 후 결과 표시
+                resultElement.innerHTML = resultText;
+            } catch (error) {
+                resultElement.innerText = "오류가 발생했습니다. 다시 시도해주세요.";
+            }
+        }
+
+        // Enter 키 입력 시 검색 함수 실행
+        document.getElementById('searchValue').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                searchSheet();
+            }
+        });
+    </script>
+</body>
+</html>
+
